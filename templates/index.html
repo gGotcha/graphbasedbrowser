@@ -49,14 +49,14 @@ var svg = d3.select('body')
   .attr('height', height);
 
 
-var nodes = []
+var nodes = [{id: 0},{id: 1},{id: 2}/*,{id: 3}*/]
 
 lastNodeId = -1
 
 var  links =[];
 
 
-
+drawit()
 
 // set up initial nodes and links
 //  - nodes are known by 'id', not by index in array.
@@ -82,7 +82,7 @@ var myCodeMirror = CodeMirror.fromTextArea(document.getElementById('code'), {
   });
 
 
-var text =  myCodeMirror.setValue('select * from nodes')
+//var text =  myCodeMirror.setValue('select * from nodes')
 
 
 function getcmNodes(){
@@ -123,6 +123,8 @@ var text = myCodeMirror.getValue();
           //getLinks()
 
 }
+
+
 
 
 
