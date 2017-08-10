@@ -19,9 +19,6 @@ def index():
 
 
 	a = 'aaa'
-	engine = create_engine(os.environ['DATABASE_URL'], echo=True)
-	connection = engine.connect()
-	return 'rrr'
 
 
 	"""	#Define our connection string
