@@ -67,7 +67,7 @@ getNodes(0)
 
 function upLiks(){
 
-   d3.json("http://localhost:5000/links/up", function(error, data) {console.log(data);})
+   d3.json("https://peaceful-reef-81280.herokuapp.com/links/up", function(error, data) {console.log(data);})
   .header("Content-Type","application/json") //400
   //.post("nodeId":"Read a book"); 
   .send("POST",JSON.stringify({"lks": links}));
@@ -94,16 +94,16 @@ function getcmNodes(){
 var text = myCodeMirror.getValue();
   
 
-    //qu = 'http://localhost:5000/todo/api/v1.0/tasks/win?select * from winners'
+    //qu = 'https://peaceful-reef-81280.herokuapp.com/todo/api/v1.0/tasks/win?select * from winners'
 
-    //qu = 'http://localhost:5000/todo/api/v1.0/tasks/win' + '?select * from nodes'
+    //qu = 'https://peaceful-reef-81280.herokuapp.com/todo/api/v1.0/tasks/win' + '?select * from nodes'
 
     //qu = text.toString()
 
-  qu = 'http://localhost:5000/todo/api/v1.0/tasks/win?' +  text.toString()
+  qu = 'https://peaceful-reef-81280.herokuapp.com/todo/api/v1.0/tasks/win?' +  text.toString()
 
-  //qu = 'http://localhost:5000/nodes'
-  //qu = 'http://localhost:5000/todo/api/v1.0/tasks/win?select id,txt from nodes'
+  //qu = 'https://peaceful-reef-81280.herokuapp.com/nodes'
+  //qu = 'https://peaceful-reef-81280.herokuapp.com/todo/api/v1.0/tasks/win?select id,txt from nodes'
 
       d3.json(qu, get_data);
 
@@ -131,7 +131,7 @@ var text = myCodeMirror.getValue();
 
 function getNodes(){
   qu = 'https://peaceful-reef-81280.herokuapp.com/nodes'
-  //qu = 'http://localhost:5000/todo/api/v1.0/tasks/win?select id,txt from nodes'
+  //qu = 'https://peaceful-reef-81280.herokuapp.com/todo/api/v1.0/tasks/win?select id,txt from nodes'
 
       d3.json(qu, get_data);
 
@@ -155,7 +155,7 @@ function getNodes(){
 
 function getLinks()
 {
-    qu = 'http://localhost:5000/links'
+    qu = 'https://peaceful-reef-81280.herokuapp.com/links'
 
     d3.json(qu, get_data);
 
@@ -510,7 +510,7 @@ function restart() {
 
         
         
-        d3.json("http://localhost:5000/nodes/create", function(error, data) {console.log(data);})
+        d3.json("https://peaceful-reef-81280.herokuapp.com/nodes/create", function(error, data) {console.log(data);})
         .header("Content-Type","application/json") //400     
         .send("POST",JSON.stringify({"nodeId":d.id, "text":d.txt}));
 
@@ -605,7 +605,7 @@ function keydown() {
         //console.log(selected_node.txt)
 
         //POST,d3--api,ok
-        d3.json("http://localhost:5000/nodes/delete", function(error, data) {
+        d3.json("https://peaceful-reef-81280.herokuapp.com/nodes/delete", function(error, data) {
           console.log(data)
           ;})
         .header("Content-Type","application/json") //400
@@ -688,7 +688,7 @@ function keydown() {
               drawit()
               d3.selectAll('input').remove();
 
-              d3.json("http://localhost:5000/nodes/update", function(error, data) {console.log(data);})
+              d3.json("https://peaceful-reef-81280.herokuapp.com/nodes/update", function(error, data) {console.log(data);})
         .header("Content-Type","application/json") //400
         //.post("nodeId":"Read a book");        
         .send("POST",JSON.stringify({"nodeId":selected_node.id, "text":selected_node.txt}));

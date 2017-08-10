@@ -49,20 +49,14 @@ def index():
 
 @app.route('/nodes',methods = ['GET','POST'])
 def getNodes():
-    def cook():
-        arr =[]
-        for row in engine.execute('select id,txt from nodes'):
-            #print (np.asarray(dict(row)))
-            #arr.append((row))
-            arr.append(dict(row))
-            #arr.append(np.asarray((row)))
-            #arr.append(eval("[" +row+"]"))
-            #print (dict(row))
-        
-        print (arr)
-        return arr
+	arr =[]
+	for row in engine.execute('select id,txt from nodes'):
+		arr.append(dict(row))
 
-    return jsonify(cook()); 
+	return jsonify(arr); 
+
+
+
 
 	
 
