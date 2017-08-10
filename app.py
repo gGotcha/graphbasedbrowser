@@ -21,6 +21,9 @@ def index():
 	a = 'aaa'
 	engine = create_engine(os.environ['DATABASE_URL'], echo=True)
 	connection = engine.connect()
+	for row in engine.execute('select * from nodes'):
+		print(row)
+
 	return 'rrr'
 
 
