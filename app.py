@@ -14,7 +14,7 @@ def index():
 
 
 		#Define our connection string
-	conn_string = "host='localhost' dbname='jive' user='q' password='w'"
+	conn_string = "host='iwnilhxwmcrdav:f8eca1b969be615f8779edd41378610e98e470ab84aee5e128d71afb2466af61@ec2-107-21-113-16.compute-1.amazonaws.com:5432/d7tbprlgeh01b4' dbname='jive' user='q' password='w'"
 
 	# print the connection string we will use to connect
 	print ("Connecting to database") #+ str(conn_string)
@@ -40,7 +40,7 @@ def index():
 	# then we use bracket access to get the FIRST value.
 	# Note that even though we've returned the columns by name we can still
 	# access columns by numeric index as well - which is really nice.
-	cursor.execute('SHOW work_mem')
+	cursor.execute('select * from nodes')
  
 	# Call fetchone - which will fetch the first row returned from the
 	# database.
