@@ -56,9 +56,47 @@ def getNodes():
 	return jsonify(arr); 
 
 
+@app.route('/nodes/create', methods = ['GET','POST'])
+def createNode():
+    if not request.json or not 'nodeId' in request.json:
+        abort(400)
+    task = {
+ 
+        'nodeId': request.json['nodeId'],
+        'text': request.json.get('text', "")
+       
+    }
+    
+    engine.execute("insert into nodes (id,txt) values (" +str(request.json['nodeId'])+ "," + "'" + str(request.json['text'])+"')")
 
 
-	
+@app.route('/nodes/update', methods = ['POST'])
+def updateNode():
+    if not request.json or not 'nodeId' in request.json:
+        abort(400)
+    task = {
+        'nodeId': request.json['nodeId'],
+        'text': request.json.get('text', "")
+    }
+
+    engine.execute("UPDATE nodes SET txt="  +"'" + str(request.json['text'])  +"'" + "WHERE id ="+ str(request.json['nodeId']))
+
+@app.route('/nodes/delete', methods = ['POST'])
+def deleteNode():
+    if not request.json or not 'nodeId' in request.json:
+        abort(400)
+    task = {
+ 
+        'nodeId': request.json['nodeId'],
+        'text': request.json.get('text', "")
+       
+    }
+
+    engine.execute('DELETE FROM nodes WHERE id = '+ str(request.json['nodeId']));
+
+
+
+@app.route('/todo/api/v1.0/tasks/win',methods = ['GET','POST'])
 
 	
 if __name__ == "__main__":
