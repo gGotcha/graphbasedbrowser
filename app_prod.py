@@ -18,8 +18,8 @@ app = Flask(__name__, static_url_path = "")
 
 
 
-engine = create_engine('postgres:///jive', echo=True)
-#engine = create_engine(os.environ['DATABASE_URL'], echo=True)
+#engine = create_engine('postgres:///jive', echo=True)
+engine = create_engine(os.environ['DATABASE_URL'], echo=True)
 connection = engine.connect()
 
 @app.errorhandler(400)
