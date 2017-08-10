@@ -2,10 +2,25 @@
   <head>
     <meta charset="utf-8">
     <title>N(CRUD+SQL)</title>
+    <link rel="stylesheet" href="app.css">
   </head>
+ <!-- 
+
+<script src="codemirror/lib/codemirror.js"></script>
+<link rel="stylesheet" href="codemirror/lib/codemirror.css">
+<script src="codemirror/mode/javascript/javascript.js"></script>
+-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://d3js.org/d3.v3.min.js"></script>
+<!--<script src="/home/z/my/summer17/jive/front/templ/Force-Directed Graph with Mouseover/node.js"></script>
+
+
+
+-->
 
 <style type="text/css">
   
+
 
 
 svg {
@@ -67,20 +82,8 @@ text.id {
 
 
 
+  
 </style>
-
-
- <!-- 
-
-
-
-<script src="codemirror/lib/codemirror.js"></script>
-<link rel="stylesheet" href="codemirror/lib/codemirror.css">
-<script src="codemirror/mode/javascript/javascript.js"></script>
--->
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="https://d3js.org/d3.v3.min.js"></script>
 
 
 <body>
@@ -154,39 +157,37 @@ var myCodeMirror = CodeMirror.fromTextArea(document.getElementById('code'), {
 function getcmNodes(){
 
 
+  var text = myCodeMirror.getValue();
+    
 
+      //qu = 'https://peaceful-reef-81280.herokuapp.com/todo/api/v1.0/tasks/win?select * from winners'
 
-var text = myCodeMirror.getValue();
-  
+      //qu = 'https://peaceful-reef-81280.herokuapp.com/todo/api/v1.0/tasks/win' + '?select * from nodes'
 
-    //qu = 'https://peaceful-reef-81280.herokuapp.com/todo/api/v1.0/tasks/win?select * from winners'
+      //qu = text.toString()
 
-    //qu = 'https://peaceful-reef-81280.herokuapp.com/todo/api/v1.0/tasks/win' + '?select * from nodes'
+    qu = 'https://peaceful-reef-81280.herokuapp.com/todo/api/v1.0/tasks/win?' +  text.toString()
 
-    //qu = text.toString()
+    //qu = 'https://peaceful-reef-81280.herokuapp.com/nodes'
+    //qu = 'https://peaceful-reef-81280.herokuapp.com/todo/api/v1.0/tasks/win?select id,txt from nodes'
 
-  qu = 'https://peaceful-reef-81280.herokuapp.com/todo/api/v1.0/tasks/win?' +  text.toString()
+        d3.json(qu, get_data);
 
-  //qu = 'https://peaceful-reef-81280.herokuapp.com/nodes'
-  //qu = 'https://peaceful-reef-81280.herokuapp.com/todo/api/v1.0/tasks/win?select id,txt from nodes'
+        function get_data(nodelist) 
+        {
+            //console.log(nodelist)
+            
+            //nodes = [{id: 0},{id: 1},{id: 2}/*,{id: 3}*/]
 
-      d3.json(qu, get_data);
+            nodes = nodelist
 
-      function get_data(nodelist) 
-      {
-          //console.log(nodelist)
-          
-          //nodes = [{id: 0},{id: 1},{id: 2}/*,{id: 3}*/]
+            getLinks()
 
-          nodes = nodelist
-
-          getLinks()
-
-      }
+        }
 
 
 
-          //getLinks()
+            //getLinks()
 
 }
 
@@ -231,9 +232,6 @@ function getLinks()
 
       $.each(linksList, function(i, item) {
           links.push({source:nodes[item.source],target:nodes[item.target]})});
-
-
-      //links = []
 
          drawit()
 

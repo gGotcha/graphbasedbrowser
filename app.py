@@ -18,8 +18,8 @@ app = Flask(__name__, static_url_path = "")
 
 
 
-engine = create_engine('postgres:///jive', echo=True)
-#engine = create_engine(os.environ['DATABASE_URL'], echo=True)
+#engine = create_engine('postgres:///jive', echo=True)
+engine = create_engine(os.environ['DATABASE_URL'], echo=True)
 connection = engine.connect()
 
 @app.errorhandler(400)
@@ -99,34 +99,58 @@ def deleteNode():
 
 @app.route('/links',methods = ['GET'])
 def getLinks():
-    #failed:
-    #a = {'target': 'nodes['+str(2)+']', 'source': 'nodes['+str(1)+']'}#, {'target': 3, 'source': 1}
-    #a = "{target: id:0, 'source: id:1}"
-    #a = {'target': 'id:0', 'source': 'id:1'}
-    #a = "{source: nodes[0], target: nodes[1]}"
-    
-    #pass list 
-    #a = [[0,1],[1,2]]
 
-    #pass json OK
-    #a = [{'s':0,'t':1},{'s':1,'t':2},{'s':0,'t':2}]
-    #return jsonify(a)
-    def cook():
-        arr =[]
-        for row in engine.execute('select target,source from edges'):
-            #print (np.asarray(dict(row)))
-            #arr.append((row))
-            arr.append(dict(row))
-            #arr.append(np.asarray((row)))
-            #arr.append(eval("[" +row+"]"))
-            #print (dict(row))
-        
-        print (arr)
-        return arr
+    arr =[]
+    for row in engine.execute('select target,source from edges'):
 
-    return jsonify(cook()); 
+        arr.append(dict(row))
+
+    return jsonify(arr); 
 
 
-	
+"""
+
+@app.route('/links/up',methods = ['POST'])
+def updateLinks():
+ 
+
+    if not request.json or not 'lks' in request.json:
+        abort(400)
+    task = {
+ 
+        'lks': request.json['lks']
+
+       
+    }
+
+    re = request.json['lks']
+    print (request.json['lks'])
+
+
+    print ('UUUUUUUUUUUUUUU')
+    engine.execute(" delete from edges where id not null")
+    for i in re:
+        print (i['source']['id'])
+        src = i['source']['id']
+        tgt = i['target']['id']
+
+        engine.execute("insert into edges (source,target) values (" + str(src) + "," + str(tgt) +")")
+
+
+
+@app.route('/links/create',methods = ['POST'])
+def createLinks():
+
+    if not request.json or not 'src' in request.json:
+        abort(400)
+    task = {
+ 
+        'source': request.json['src'],
+        'target': request.json['tgt']
+       
+    }
+    #engine.execute('insert into edges (source,target) values (2,3)')
+    engine.execute("insert into edges (source,target) values (" +str(request.json['src'])+ "," + "'" + str(request.json['tgt'])+"')")
+    """
 if __name__ == "__main__":
     app.run(debug = True)
