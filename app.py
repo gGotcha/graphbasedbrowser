@@ -10,6 +10,7 @@ app = Flask(__name__)
 @app.route('/')
 def index():
 
+"""	
 		#Define our connection string
 	conn_string = "host='localhost' dbname='jive' user='q' password='w'"
 
@@ -54,7 +55,9 @@ def index():
 	print(memory)
 
 
-	return  str(memory)
+	return  str(memory)"""
+
+	return 'a'
 
 	
 if __name__ == "__main__":
