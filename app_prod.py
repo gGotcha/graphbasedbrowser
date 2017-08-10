@@ -95,10 +95,6 @@ def deleteNode():
     engine.execute('DELETE FROM nodes WHERE id = '+ str(request.json['nodeId']));
 
 
-
-
-	
-
 	
 if __name__ == "__main__":
     app.run(debug = True)
