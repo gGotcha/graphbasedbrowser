@@ -144,8 +144,8 @@ function getNodes(){
           nodes = nodelist
 
 
-          drawit()
-          //getLinks()
+          //drawit()
+          getLinks()
 
       }
 
@@ -166,6 +166,9 @@ function getLinks()
 
       $.each(linksList, function(i, item) {
           links.push({source:nodes[item.source],target:nodes[item.target]})});
+
+
+      links = []
 
          drawit()
 
