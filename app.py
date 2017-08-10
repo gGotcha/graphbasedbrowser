@@ -95,6 +95,38 @@ def deleteNode():
     engine.execute('DELETE FROM nodes WHERE id = '+ str(request.json['nodeId']));
 
 
+#LINKS
+
+@app.route('/links',methods = ['GET'])
+def getLinks():
+    #failed:
+    #a = {'target': 'nodes['+str(2)+']', 'source': 'nodes['+str(1)+']'}#, {'target': 3, 'source': 1}
+    #a = "{target: id:0, 'source: id:1}"
+    #a = {'target': 'id:0', 'source': 'id:1'}
+    #a = "{source: nodes[0], target: nodes[1]}"
+    
+    #pass list 
+    #a = [[0,1],[1,2]]
+
+    #pass json OK
+    #a = [{'s':0,'t':1},{'s':1,'t':2},{'s':0,'t':2}]
+    #return jsonify(a)
+    def cook():
+        arr =[]
+        for row in engine.execute('select target,source from edges'):
+            #print (np.asarray(dict(row)))
+            #arr.append((row))
+            arr.append(dict(row))
+            #arr.append(np.asarray((row)))
+            #arr.append(eval("[" +row+"]"))
+            #print (dict(row))
+        
+        print (arr)
+        return arr
+
+    return jsonify(cook()); 
+
+
 	
 if __name__ == "__main__":
     app.run(debug = True)
