@@ -54,7 +54,7 @@ def index():
 	print(memory)
 
 
-	return 'a' #str(a)#render_template('index.html')
+	return  str(memory)
 
 	
 if __name__ == "__main__":
