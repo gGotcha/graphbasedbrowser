@@ -17,7 +17,7 @@ app = Flask(__name__)
 def index():
 
 
-	a = 'aaa'
+a = 'aaa'
 
 
 	"""	#Define our connection string
