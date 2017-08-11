@@ -108,7 +108,6 @@ def getLinks():
     return jsonify(arr); 
 
 
-"""
 
 @app.route('/links/up',methods = ['POST'])
 def updateLinks():
@@ -128,16 +127,18 @@ def updateLinks():
 
 
     print ('UUUUUUUUUUUUUUU')
-    engine.execute(" delete from edges where id not null")
+    engine.execute(" delete from edges")
     for i in re:
         print (i['source']['id'])
         src = i['source']['id']
         tgt = i['target']['id']
 
-        engine.execute("insert into edges (source,target) values (" + str(src) + "," + str(tgt) +")")
+
+        engine.execute("INSERT INTO public.edges(source, target) values (" + str(src) + "," + str(tgt) +")")
+        #engine.execute("insert into edges (source,target) values (" + str(src) + "," + str(tgt) +")")
 
 
-
+"""
 @app.route('/links/create',methods = ['POST'])
 def createLinks():
 

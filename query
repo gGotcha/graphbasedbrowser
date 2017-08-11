@@ -1,0 +1,1 @@
+﻿INSERT INTO public.edges(source, target) VALUES (0, 2);

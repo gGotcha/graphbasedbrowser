@@ -95,10 +95,63 @@ def deleteNode():
     engine.execute('DELETE FROM nodes WHERE id = '+ str(request.json['nodeId']));
 
 
+#LINKS
+
+@app.route('/links',methods = ['GET'])
+def getLinks():
+
+    arr =[]
+    for row in engine.execute('select target,source from edges'):
+
+        arr.append(dict(row))
+
+    return jsonify(arr); 
 
 
-	
 
-	
+@app.route('/links/up',methods = ['POST'])
+def updateLinks():
+ 
+
+    if not request.json or not 'lks' in request.json:
+        abort(400)
+    task = {
+ 
+        'lks': request.json['lks']
+
+       
+    }
+
+    re = request.json['lks']
+    print (request.json['lks'])
+
+
+    print ('UUUUUUUUUUUUUUU')
+    engine.execute(" delete from edges")
+    for i in re:
+        print (i['source']['id'])
+        src = i['source']['id']
+        tgt = i['target']['id']
+
+
+        engine.execute("INSERT INTO public.edges(source, target) values (" + str(src) + "," + str(tgt) +")")
+        #engine.execute("insert into edges (source,target) values (" + str(src) + "," + str(tgt) +")")
+
+
+"""
+@app.route('/links/create',methods = ['POST'])
+def createLinks():
+
+    if not request.json or not 'src' in request.json:
+        abort(400)
+    task = {
+ 
+        'source': request.json['src'],
+        'target': request.json['tgt']
+       
+    }
+    #engine.execute('insert into edges (source,target) values (2,3)')
+    engine.execute("insert into edges (source,target) values (" +str(request.json['src'])+ "," + "'" + str(request.json['tgt'])+"')")
+    """
 if __name__ == "__main__":
     app.run(debug = True)
