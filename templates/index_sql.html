@@ -2,35 +2,54 @@
   <head>
     <meta charset="utf-8">
     <title>N(CRUD+SQL)</title>
-    <link rel="stylesheet" href="app.css">
+    <link rel="stylesheet">
   </head>
- <!-- 
+
 
 <script src="codemirror/lib/codemirror.js"></script>
 <link rel="stylesheet" href="codemirror/lib/codemirror.css">
 <script src="codemirror/mode/javascript/javascript.js"></script>
--->
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://d3js.org/d3.v3.min.js"></script>
 <!--<script src="/home/z/my/summer17/jive/front/templ/Force-Directed Graph with Mouseover/node.js"></script>
-
-
-
 -->
 
 <style type="text/css">
   
+/*
 
-
-
-svg {
   background-color: #FFF;
   cursor: default;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   -o-user-select: none;
-  user-select: none;
+user-select: none;
+
+
+position: relative;
+left: 50%;
+-webkit-transform: translateX(-50%);
+-ms-transform: translateX(-50%);
+transform: translateX(-50%);
+
+*/
+
+
+svg {
+
+  background-color: #FFF;
+  cursor: default;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+user-select: none;
+
+
+
+
 }
 
 svg:not(.active):not(.ctrl) {
@@ -81,27 +100,58 @@ text.id {
 }
 
 
+div.CodeMirror.cm-s-default{
+  width: 700px;
+    height: 50px;
+    position:absolute;
+    top:10px;
+    left:10px;
+    
+}
+
+
+#sql {
+    
+     position:absolute;
+    top:70px;
+    left:10px;
+    
+}
+
+#clearSVG {
+    
+     position:absolute;
+    top:70px;
+    left:90px;
+    
+}
 
   
 </style>
 
 
+<div></div>
+
+
 <body>
-<div id="container">
+
+<divv id="container">
+
+
     <textarea id="code" cols="6" rows="3"></textarea>
-</div>
+    <input id = 'sql' value="Run query" onclick="getcmNodes()" type="button">
+
+
+      <input id = 'clearSVG'value="Clear SVG" onclick="clearAlllinks()" type="button">
+</divv>
 
 
 
-
-
-<input value="Нажми меня" onclick="getcmNodes()" type="button">
 
 
 
 
 <script>
-
 
 
 
@@ -117,7 +167,7 @@ var svg = d3.select('body')
   .attr('height', height);
 
 
-var nodes = [{id: 0},{id: 1},{id: 2}/*,{id: 3}*/]
+var nodes = [];//[{id: 0},{id: 1},{id: 2}/*,{id: 3}*/]
 
 lastNodeId = -1
 
@@ -125,12 +175,32 @@ var  links =[];
 
 
 //drawit()
-getNodes(0)
+
 
 // set up initial nodes and links
 //  - nodes are known by 'id', not by index in array.
 //  - reflexive linksList are indicated on the node (as a bold black circle).
 //  - links are always source < target; edge directions are set by 'left' and 'right'.
+
+
+
+
+var up = 0
+function clearAlllinks(){
+
+
+   d3.json("http://localhost:5000/links/delete", function(error, data) {console.log(data);})
+  .header("Content-Type","application/json") //400
+  .send("POST",JSON.stringify({"lks": links}));
+
+  nodes =[]
+up = 1
+  getNodes()
+
+
+}
+
+
 
 
 function upLiks(){
@@ -151,7 +221,7 @@ var myCodeMirror = CodeMirror.fromTextArea(document.getElementById('code'), {
   });
 
 
-//var text =  myCodeMirror.setValue('select * from nodes')
+var text =  myCodeMirror.setValue('select * from nodes where id = 0')
 
 
 function getcmNodes(){
@@ -166,10 +236,13 @@ function getcmNodes(){
 
       //qu = text.toString()
 
-    qu = 'http://localhost:5000/todo/api/v1.0/tasks/win?' +  text.toString()
+    qu = 'http://localhost:5000/getquery?' +  text.toString()
 
     //qu = 'http://localhost:5000/nodes'
-    //qu = 'http://localhost:5000/todo/api/v1.0/tasks/win?select id,txt from nodes'
+   //qu = 'http://localhost:5000/todo/api/v1.0/tasks/win?select id from public.nodes where id =2'
+
+
+
 
         d3.json(qu, get_data);
 
@@ -185,10 +258,6 @@ function getcmNodes(){
 
         }
 
-
-
-            //getLinks()
-
 }
 
 
@@ -196,6 +265,9 @@ function getcmNodes(){
 
 
 function getNodes(){
+
+
+
   qu = 'http://localhost:5000/nodes'
   //qu = 'http://localhost:5000/todo/api/v1.0/tasks/win?select id,txt from nodes'
 
@@ -203,11 +275,22 @@ function getNodes(){
 
       function get_data(nodelist) 
       {
-          //console.log(nodelist)
+          console.log(nodelist)
           
-          nodes = [{id: 0},{id: 1},{id: 2}/*,{id: 3}*/]
+         // nodes = [{id: 0},{id: 1},{id: 2}/*,{id: 3}*/]
 
-          nodes = nodelist
+         nodes = []
+
+      $.each(nodelist, function(i, item) {
+         //onsole.log(item.target)
+          //onsole.log(item.source)
+          //сnsole.log(links)
+          //links.push({source:nodes[item.source],target:nodes[item.target]})});
+          
+          nodes.push({id:item.id,txt:item.txt})
+        })
+
+          //nodes = nodelist
 
 
           //drawit()
@@ -227,12 +310,57 @@ function getLinks()
 
     function get_data(linksList) 
     {
+  
+      console.log(linksList)
+      console.log(links)
 
       links = []
 
       $.each(linksList, function(i, item) {
-          links.push({source:nodes[item.source],target:nodes[item.target]})});
+          console.log(item.target)
+           console.log(item.source)
 
+
+           if (nodes[item.source]||nodes[item.target] === undefined){
+              //nodes[item.source] = 0
+              console.log('tttttttt')
+
+           }
+          console.log(nodes[item.target])
+          console.log(nodes[item.source])
+          console.log(nodes[0])
+          console.log(nodes[1])
+          console.log(nodes)
+          console.log(links)
+
+
+
+
+          //links.push({source:nodes[item.source],target:nodes[item.target]})});
+          links.push({source:nodes[item.source],target:nodes[item.target]})
+          //links.push({source:nodes[item.target],target:nodes[item.source]})
+
+          console.log(links)
+     
+
+
+
+
+          });
+
+/*
+
+//got array OK
+//OK got json
+jarr = [{s:1,t:2},{s:0,t:2}]//[{s:0,t:1},{s:1,t:2},{s:0,t:2}]
+links =[];
+
+$.each(jarr, function(i, item) {
+    links.push({source:nodes[item.s],target:nodes[item.t]})
+    //console.log(item.s, item.t);
+});
+
+*/
          drawit()
 
     }
@@ -241,12 +369,11 @@ function getLinks()
 
 
 
+getNodes()
 
 
 
-//console.log(nodes)
 
-//console.log(links)
 
 
 
@@ -269,22 +396,16 @@ function getLinks()
 function drawit(){
 
 
-//d3.selectAll('link').remove
+//console.log(nodes)
+//console.log(links)
 
-//d3.selectAll('circle').remove();
 
-//d3.selectAll('d').remove();
 
+d3.selectAll('path').remove();
 
 d3.selectAll('defs').remove();
 
 d3.selectAll('g').remove();
-
-
-console.log(links)
-
-
-
 
   // init D3 force layout
 
@@ -325,8 +446,9 @@ console.log(links)
     .attr('d', 'M0,0L0,0');
 
   // handles to link and node element groups
-  var path = svg.append('svg:g').selectAll('path'),
-      circle = svg.append('svg:g').selectAll('g');
+   var circle = svg.append('svg:g').selectAll('g'),
+  path = svg.append('svg:g').selectAll('path')
+
 
   // mouse event vars
   var selected_node = null,
@@ -346,28 +468,49 @@ console.log(links)
 
 
 
-   // d3.selectAll('path').remove()
+     // d3.selectAll('path').remove()
 
 
 
-    // draw directed linksList with proper padding from node centers
-    path.attr('d', function(d) {
-      var deltaX = d.target.x - d.source.x,
-          deltaY = d.target.y - d.source.y,
-          dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY),
-          normX = deltaX / dist,
-          normY = deltaY / dist,
-          sourcePadding = d.left ? 17 : 12,
-          targetPadding = d.right ? 17 : 12,
-          sourceX = d.source.x + (sourcePadding * normX),
-          sourceY = d.source.y + (sourcePadding * normY),
-          targetX = d.target.x - (targetPadding * normX),
-          targetY = d.target.y - (targetPadding * normY);
-  //>>>>>>>>>>>>>>>>>OFF DRAW LINKS
-    return 'M' + sourceX + ',' + sourceY + 'L' + targetX + ',' + targetY;
-    });
+      // draw directed linksList with proper padding from node centers
+
+
+
+      path.attr('d', function(d) {
+        //console.log('ddddddddddddddddddddddddddddddddddd')
+        //console.log(d.source)
+        //console.log(d.target)
+        //console.log(d.id)
+        //console.log(d)
+
+        var deltaX = d.target.x - d.source.x,
+            deltaY = d.target.y - d.source.y,
+            dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY),
+            normX = deltaX / dist,
+            normY = deltaY / dist,
+            sourcePadding = d.left ? 17 : 12,
+            targetPadding = d.right ? 17 : 12,
+            sourceX = d.source.x + (sourcePadding * normX),
+            sourceY = d.source.y + (sourcePadding * normY),
+            targetX = d.target.x - (targetPadding * normX),
+            targetY = d.target.y - (targetPadding * normY);
+
+        //console.log(d.id)
+
+    //>>>>>>>>>>>>>>>>>OFF DRAW LINKS
+      return 'M' + sourceX + ',' + sourceY + 'L' + targetX + ',' + targetY;
+      });
+
+ //console.log(d.id)
 
     circle.attr('transform', function(d) {
+
+
+      //console.log('transformffffffffffffffffffff')
+      //console.log(d.id)
+      //console.log(nodes)
+
+
       return 'translate(' + d.x + ',' + d.y + ')';
     });
   }
@@ -383,16 +526,13 @@ function callrestart(argument) {
 function restart() {
 
 
-
-
-
-        
-
-
-
-
+  console.log('linkssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss')
+  console.log(links)
   // path (link) group
+
   path = path.data(links);
+
+  //path = path.data(links);
 
 
 
@@ -403,6 +543,7 @@ function restart() {
 
 
 
+//cjздание движением
   // add new links
   path.enter().append('svg:path')
     .attr('class', 'link')
@@ -426,14 +567,36 @@ function restart() {
 
   // remove old links
 
+   // d3.selectAll('path').remove()
   path.exit().remove();
 
+//var nodes = [{id: 0},{id: 1},{id: 2}/*,{id: 3}*/]
 
+//console.log(nodes)
 
 
   // circle (node) group
   // NB: the function arg is crucial here! nodes are known by id, not by index!
-  circle = circle.data(nodes, function(d) { return d.id; });
+  circle = circle.data(nodes, function(d) { 
+
+
+if (up === 1){
+
+  console.log('wtf')
+  d.id = 0
+  up = 0
+
+}
+
+
+    console.log(d.id)
+
+
+
+
+
+
+    return d.id; });
 
   // update existing nodes (reflexive & selected visual states)
   circle.selectAll('circle')
@@ -453,6 +616,9 @@ function restart() {
     .style('stroke', function(d) { return d3.rgb(colors(d.id)).darker().toString(); })
     .classed('reflexive', function(d) { return d.reflexive; })
     .on('mouseover', function(d) {
+
+
+
 
 
 
@@ -551,6 +717,9 @@ function restart() {
 
     });
 
+
+ 
+
   // show node IDs
   g.append('svg:text')
       .attr('x', 20)
@@ -575,13 +744,16 @@ function restart() {
         //console.log(d.txt)
 
         
-        
+        //CREATE
         d3.json("http://localhost:5000/nodes/create", function(error, data) {console.log(data);})
         .header("Content-Type","application/json") //400     
         .send("POST",JSON.stringify({"nodeId":d.id, "text":d.txt}));
+          
+       
+        lastNodeId = d.id 
 
-        
-        return d.txt; })
+
+        return d.id; })
 
 
   // remove old nodes
@@ -640,6 +812,7 @@ function spliceLinksForNode(node) {
   });
   toSplice.map(function(l) {
     links.splice(links.indexOf(l), 1);
+
   });
 }
 
@@ -660,7 +833,7 @@ function keydown() {
 
   if(!selected_node && !selected_link) return;
   switch(d3.event.keyCode) {
-    case 8: // backspace
+    //case 8: // backspace
     case 46: // delete
       if(selected_node) {
         nodes.splice(nodes.indexOf(selected_node), 1);
@@ -680,6 +853,7 @@ function keydown() {
         //.send("POST",JSON.stringify({"nodeId":selected_node.id, "text":"descr"}));
         
         spliceLinksForNode(selected_node);
+
       } else if(selected_link) {
         links.splice(links.indexOf(selected_link), 1);
       }
@@ -734,13 +908,73 @@ function keydown() {
 
         d3.selectAll('input').remove();
              
-        d3.select('body').append('input')
+        d3.select('div')
+            .append('input')
             .attr('type','text')
-            .attr('name','textInput')
+            //.attr('type="hidden"')
+            .attr('name','textinput')
             .attr('id','myform')
             .attr('value','Text goes here')
+            
+            /*
+            .on('onmouseenter',function() {
 
-        d3.select('body').append('input')
+                console.log('uuuuuuuuu')
+
+            })
+            */  
+
+            .on('keydown', function() {
+
+               switch(d3.event.keyCode) {
+
+                        case 13: // enter
+                         
+                                  selected_node.txt = document.getElementById("myform").value;
+                                  svg.selectAll('*').remove();
+                                  drawit()
+                                  d3.selectAll('input').remove();
+                                  d3.json("http://localhost:5000/nodes/update", function(error, data) {console.log(data);})
+                                  .header("Content-Type","application/json") //400
+                                  //.post("nodeId":"Read a book");        
+                                  .send("POST",JSON.stringify({"nodeId":selected_node.id, "text":selected_node.txt}));
+
+
+                                  restart();
+                                  break;
+                                  }})
+                
+              d3.select('svg').on('mouseup', function() {
+    
+
+                                  selected_node.txt = document.getElementById("myform").value; //понятно что форма не получает, ругается
+                                  svg.selectAll('*').remove();
+                                  drawit()
+                                  d3.selectAll('input').remove();
+                                  d3.json("http://localhost:5000/nodes/update", function(error, data) {console.log(data);})
+                                  .header("Content-Type","application/json") //400
+                                  //.post("nodeId":"Read a book");        
+                                  .send("POST",JSON.stringify({"nodeId":selected_node.id, "text":selected_node.txt}));
+
+
+                                  //restart();
+                                  return true
+              })
+              
+               
+
+            $("div").offset({ left: selected_node.x , top: selected_node.y +10})
+
+            console.log(selected_node.x)
+
+   
+
+
+
+/*
+
+
+        d3.select('div').append('input')
             .attr('type','Submit')
             .attr('name','submit')
             .attr('value','go')
@@ -759,8 +993,11 @@ function keydown() {
         //.post("nodeId":"Read a book");        
         .send("POST",JSON.stringify({"nodeId":selected_node.id, "text":selected_node.txt}));
 
+
+
             })
- 
+ */
+
       }
       restart();
       break;

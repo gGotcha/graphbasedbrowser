@@ -1,295 +1,36 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>N(CRUD+SQL)</title>
-    <link rel="stylesheet" href="app.css">
+    <title>Node+Link(CRUD+SQL)</title>
+    <link rel="stylesheet">
   </head>
- <!-- 
+
 
 <script src="codemirror/lib/codemirror.js"></script>
 <link rel="stylesheet" href="codemirror/lib/codemirror.css">
 <script src="codemirror/mode/javascript/javascript.js"></script>
--->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://d3js.org/d3.v3.min.js"></script>
-<!--<script src="/home/z/my/summer17/jive/front/templ/Force-Directed Graph with Mouseover/node.js"></script>
 
-
-
--->
 
 <style type="text/css">
   
-body {
-  font-family: "Helvetica Neue", Helvetica, sans-serif;
-  margin: 0 auto 4em auto;
-  tab-size: 2;
-  -webkit-text-size-adjust: none;
-}
 
-header {
-  color: #999;
-  width: 100%;
-  top: 0;
-  left: 0;
-  padding: 1.5em 0;
-}
-
-.navigation {
-  float: right;
-}
-
-.navigation a:not(.self) {
-  color: inherit;
-}
-
-.column {
-  max-width: 960px;
-  position: relative;
-  display: block;
-  margin: 0 auto;
-  padding: 0 10px;
-}
-
-h1 {
-  font-size: 46px;
-  font-weight: 500;
-  letter-spacing: -1px;
-  margin: 0.1em 0;
-}
-
-h2 {
-  margin-top: 2em;
-}
-
-h1, h2 {
-  text-rendering: optimizeLegibility;
-}
-
-.avatar {
-  position: absolute;
-  top: 0;
-  right: 100%;
-  border-radius: 4px;
-}
-
-.gist-readme {
-  line-height: 1.5em;
-  max-width: 720px;
-  max-height: 1000000vh;
-}
-
-blockquote {
-  max-width: 640px;
-}
-
-li {
-  max-width: 680px;
-}
-
-a:link {
-  color: #3182bd;
-  fill: #3182bd;
-}
-
-a:visited {
-  color: #756bb1;
-  fill: #756bb1;
-}
-
-a.self {
-  color: #000;
-}
-
-a.anchor {
-  color: #ccc;
-  left: -40px;
-  padding: 0 10px;
-  margin: 0 10px;
-  position: absolute;
-  font-weight: normal;
-}
-
-a:not(:hover) {
-  text-decoration: none;
-}
-
-.gist-id,
-pre,
-code,
-textarea {
-  font-family: "Menlo", monospace;
-  line-height: normal;
-}
-
-.gist-id {
-  line-height: 0;
-}
-
-textarea {
-  font-size: 100%;
-}
-
-pre {
-  border-left: solid 2px #ccc;
-  padding-left: 18px;
-  margin: 2em 0 2em -20px;
-  max-width: 960px;
-  overflow-x: auto;
-}
-
-.html .value,
-.javascript .string,
-.javascript .regexp {
-  color: #756bb1;
-}
-
-.html .tag,
-.css .tag,
-.javascript .keyword {
-  color: #3182bd;
-}
-
-aside,
-.comment {
-  color: #636363;
-}
-
-.html .doctype,
-.javascript .number {
-  color: #31a354;
-}
-
-.html .attribute,
-.css .attribute,
-.javascript .class,
-.javascript .special {
-  color: #e6550d;
-}
-
-h1,
-iframe {
-  width: 960px;
-}
-
-iframe {
-  border: solid 1px #eee;
-  border-bottom: solid 1px #ccc;
-}
-
-.gists {
-  max-width: 970px;
-}
-
-.gists .gist {
-  background-position: 50% 0%;
-  border: solid 1px #eee;
-  border-bottom: solid 1px #ccc;
-  -webkit-box-sizing: border-box;
-  -ms-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  -o-box-sizing: border-box;
-  box-sizing: border-box;
-  display: inline-block;
-  float: left;
-  line-height: normal;
-  margin: 0 10px 10px 0;
-  position: relative;
-  text-shadow: 1px 1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, -1px -1px 0 #fff;
-  -webkit-transition: ease 750ms background-position;
-  -moz-transition: ease 750ms background-position;
-  -ms-transition: ease 750ms background-position;
-  -o-transition: ease 750ms background-position;
-  transition: ease 750ms background-position;
-  width: 232px;
-  padding: 8px 10px;
-}
-
-.gists .gist--thumbnail {
-  height: 82px;
-  color: #000;
-}
-
-.gists .gist:hover,
-.gists .gist:focus {
-  background-color: #eee;
-  background-position: 50% 100%;
-  text-decoration: none;
-}
-
-.gists .gist-description {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-height: 55px;
-}
-
-.gists .gist-author {
-  color: #777;
-  font-weight: 300;
-}
-
-.gists .gist:hover .gist-underline {
-  text-decoration: underline;
-}
-
-.loading {
-  clear: both;
-  color: #aaa;
-}
-
-.index-pop {
-  position: absolute;
-  right: 10px;
-  margin-top: 1em;
-  line-height: 1.5em;
-}
-
-.index-pop svg {
-  text-decoration: none !important;
-  margin-left: 0.3em;
-  position: relative;
-  top: 3px;
-}
-
-.gist-secret {
-  display: inline-block;
-  padding: 4px 5px;
-  font-size: 11px;
-  font-weight: 300;
-  line-height: 10px;
-  color: #a1882b;
-  text-transform: uppercase;
-  vertical-align: middle;
-  background-color: #ffefc6;
-  border-radius: 3px;
-  margin-top: -4px;
-}
-
-.date {
-  font-size: 11px;
-}
-
-@media only screen and (max-width: 860px) {
-  .index-pop {
-    display: none;
-  }
-}
-
-@media only screen and (max-width: 1060px) {
-  .avatar {
-    display: none;
-  }
-}
 
 
 svg {
+
   background-color: #FFF;
   cursor: default;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   -o-user-select: none;
-  user-select: none;
+user-select: none;
+
+
+
+
 }
 
 svg:not(.active):not(.ctrl) {
@@ -340,49 +81,46 @@ text.id {
 }
 
 
+div.CodeMirror.cm-s-default{
+  width: 700px;
+    height: 50px;
+    position:absolute;
+    top:10px;
+    left:10px;
+    
+}
+
+
+#sql {
+    
+     position:absolute;
+    top:70px;
+    left:10px;
+    
+}
+
+#clearSVG {
+    
+     position:absolute;
+    top:70px;
+    left:90px;
+    
+}
 
   
 </style>
 
 
+<div></div>
+
+
 <body>
 
-<!---
-
-<div id="container">
     <textarea id="code" cols="6" rows="3"></textarea>
-</div>
-
-
-
-
-
-<input value="Нажми меня" onclick="getcmNodes()" type="button">
-
--->
-<p>
-
-Click in the open space to add a node, drag from one node to another to add an edge.<br>
-Ctrl-drag a node to move the graph layout.<br>
-Click a node or an edge to select it.<br>
-<p></p>
-When a node, link selected: <br>
-Delete removes the node.<br>
-Tab renames <br>
-</p></p>
-
-Все пишется в базу. <br>
-На сегодня это всё...<br>
-
-<p></p>
-<a href="http://bl.ocks.org/rkirsling/5001347">http://bl.ocks.org/rkirsling/5001347</a>
-
-</p>
-
-
-
+    <input id = 'sql' value="Run query" onclick="getcmNodes()" type="button">
+    <input id = 'clearSVG'value="Clear SVG" onclick="clearAlllinks()" type="button">
+</body>
 <script>
-
 
 
 
@@ -398,7 +136,7 @@ var svg = d3.select('body')
   .attr('height', height);
 
 
-var nodes = [{id: 0},{id: 1},{id: 2}/*,{id: 3}*/]
+var nodes = [];//[{id: 0},{id: 1},{id: 2}/*,{id: 3}*/]
 
 lastNodeId = -1
 
@@ -406,12 +144,30 @@ var  links =[];
 
 
 //drawit()
-getNodes(0)
+
 
 // set up initial nodes and links
 //  - nodes are known by 'id', not by index in array.
 //  - reflexive linksList are indicated on the node (as a bold black circle).
 //  - links are always source < target; edge directions are set by 'left' and 'right'.
+
+
+
+
+var up = 0
+function clearAlllinks(){
+
+
+   d3.json("https://graphbasedbrowser.herokuapp.com/links/delete", function(error, data) {console.log(data);})
+  .header("Content-Type","application/json") //400
+  .send("POST",JSON.stringify({"lks": links}));
+
+  nodes =[]
+up = 1
+  getNodes()
+
+
+}
 
 
 function upLiks(){
@@ -432,7 +188,7 @@ var myCodeMirror = CodeMirror.fromTextArea(document.getElementById('code'), {
   });
 
 
-//var text =  myCodeMirror.setValue('select * from nodes')
+var text =  myCodeMirror.setValue('select * from nodes where id > 0')
 
 
 function getcmNodes(){
@@ -447,10 +203,13 @@ function getcmNodes(){
 
       //qu = text.toString()
 
-    qu = 'https://graphbasedbrowser.herokuapp.com/todo/api/v1.0/tasks/win?' +  text.toString()
+    qu = 'https://graphbasedbrowser.herokuapp.com/getquery?' +  text.toString()
 
     //qu = 'https://graphbasedbrowser.herokuapp.com/nodes'
-    //qu = 'https://graphbasedbrowser.herokuapp.com/todo/api/v1.0/tasks/win?select id,txt from nodes'
+   //qu = 'https://graphbasedbrowser.herokuapp.com/todo/api/v1.0/tasks/win?select id from public.nodes where id =2'
+
+
+
 
         d3.json(qu, get_data);
 
@@ -466,10 +225,6 @@ function getcmNodes(){
 
         }
 
-
-
-            //getLinks()
-
 }
 
 
@@ -477,6 +232,9 @@ function getcmNodes(){
 
 
 function getNodes(){
+
+
+
   qu = 'https://graphbasedbrowser.herokuapp.com/nodes'
   //qu = 'https://graphbasedbrowser.herokuapp.com/todo/api/v1.0/tasks/win?select id,txt from nodes'
 
@@ -484,11 +242,22 @@ function getNodes(){
 
       function get_data(nodelist) 
       {
-          //console.log(nodelist)
+          console.log(nodelist)
           
-          nodes = [{id: 0},{id: 1},{id: 2}/*,{id: 3}*/]
+         // nodes = [{id: 0},{id: 1},{id: 2}/*,{id: 3}*/]
 
-          nodes = nodelist
+         nodes = []
+
+      $.each(nodelist, function(i, item) {
+         //onsole.log(item.target)
+          //onsole.log(item.source)
+          //сnsole.log(links)
+          //links.push({source:nodes[item.source],target:nodes[item.target]})});
+          
+          nodes.push({id:item.id,txt:item.txt})
+        })
+
+          //nodes = nodelist
 
 
           //drawit()
@@ -508,12 +277,57 @@ function getLinks()
 
     function get_data(linksList) 
     {
+  
+      console.log(linksList)
+      console.log(links)
 
       links = []
 
       $.each(linksList, function(i, item) {
-          links.push({source:nodes[item.source],target:nodes[item.target]})});
+          console.log(item.target)
+           console.log(item.source)
 
+
+           if (nodes[item.source]||nodes[item.target] === undefined){
+              //nodes[item.source] = 0
+              console.log('tttttttt')
+
+           }
+          console.log(nodes[item.target])
+          console.log(nodes[item.source])
+          console.log(nodes[0])
+          console.log(nodes[1])
+          console.log(nodes)
+          console.log(links)
+
+
+
+
+          //links.push({source:nodes[item.source],target:nodes[item.target]})});
+          links.push({source:nodes[item.source],target:nodes[item.target]})
+          //links.push({source:nodes[item.target],target:nodes[item.source]})
+
+          console.log(links)
+     
+
+
+
+
+          });
+
+/*
+
+//got array OK
+//OK got json
+jarr = [{s:1,t:2},{s:0,t:2}]//[{s:0,t:1},{s:1,t:2},{s:0,t:2}]
+links =[];
+
+$.each(jarr, function(i, item) {
+    links.push({source:nodes[item.s],target:nodes[item.t]})
+    //console.log(item.s, item.t);
+});
+
+*/
          drawit()
 
     }
@@ -522,12 +336,11 @@ function getLinks()
 
 
 
+getNodes()
 
 
 
-//console.log(nodes)
 
-//console.log(links)
 
 
 
@@ -550,22 +363,16 @@ function getLinks()
 function drawit(){
 
 
-//d3.selectAll('link').remove
+//console.log(nodes)
+//console.log(links)
 
-//d3.selectAll('circle').remove();
 
-//d3.selectAll('d').remove();
 
+d3.selectAll('path').remove();
 
 d3.selectAll('defs').remove();
 
 d3.selectAll('g').remove();
-
-
-console.log(links)
-
-
-
 
   // init D3 force layout
 
@@ -606,8 +413,9 @@ console.log(links)
     .attr('d', 'M0,0L0,0');
 
   // handles to link and node element groups
-  var path = svg.append('svg:g').selectAll('path'),
-      circle = svg.append('svg:g').selectAll('g');
+   var circle = svg.append('svg:g').selectAll('g'),
+  path = svg.append('svg:g').selectAll('path')
+
 
   // mouse event vars
   var selected_node = null,
@@ -627,28 +435,49 @@ console.log(links)
 
 
 
-   // d3.selectAll('path').remove()
+     // d3.selectAll('path').remove()
 
 
 
-    // draw directed linksList with proper padding from node centers
-    path.attr('d', function(d) {
-      var deltaX = d.target.x - d.source.x,
-          deltaY = d.target.y - d.source.y,
-          dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY),
-          normX = deltaX / dist,
-          normY = deltaY / dist,
-          sourcePadding = d.left ? 17 : 12,
-          targetPadding = d.right ? 17 : 12,
-          sourceX = d.source.x + (sourcePadding * normX),
-          sourceY = d.source.y + (sourcePadding * normY),
-          targetX = d.target.x - (targetPadding * normX),
-          targetY = d.target.y - (targetPadding * normY);
-  //>>>>>>>>>>>>>>>>>OFF DRAW LINKS
-    return 'M' + sourceX + ',' + sourceY + 'L' + targetX + ',' + targetY;
-    });
+      // draw directed linksList with proper padding from node centers
+
+
+
+      path.attr('d', function(d) {
+        //console.log('ddddddddddddddddddddddddddddddddddd')
+        //console.log(d.source)
+        //console.log(d.target)
+        //console.log(d.id)
+        //console.log(d)
+
+        var deltaX = d.target.x - d.source.x,
+            deltaY = d.target.y - d.source.y,
+            dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY),
+            normX = deltaX / dist,
+            normY = deltaY / dist,
+            sourcePadding = d.left ? 17 : 12,
+            targetPadding = d.right ? 17 : 12,
+            sourceX = d.source.x + (sourcePadding * normX),
+            sourceY = d.source.y + (sourcePadding * normY),
+            targetX = d.target.x - (targetPadding * normX),
+            targetY = d.target.y - (targetPadding * normY);
+
+        //console.log(d.id)
+
+    //>>>>>>>>>>>>>>>>>OFF DRAW LINKS
+      return 'M' + sourceX + ',' + sourceY + 'L' + targetX + ',' + targetY;
+      });
+
+ //console.log(d.id)
 
     circle.attr('transform', function(d) {
+
+
+      //console.log('transformffffffffffffffffffff')
+      //console.log(d.id)
+      //console.log(nodes)
+
+
       return 'translate(' + d.x + ',' + d.y + ')';
     });
   }
@@ -664,16 +493,13 @@ function callrestart(argument) {
 function restart() {
 
 
-
-
-
-        
-
-
-
-
+  console.log('linkssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss')
+  console.log(links)
   // path (link) group
+
   path = path.data(links);
+
+  //path = path.data(links);
 
 
 
@@ -684,6 +510,7 @@ function restart() {
 
 
 
+//cjздание движением
   // add new links
   path.enter().append('svg:path')
     .attr('class', 'link')
@@ -707,14 +534,36 @@ function restart() {
 
   // remove old links
 
+   // d3.selectAll('path').remove()
   path.exit().remove();
 
+//var nodes = [{id: 0},{id: 1},{id: 2}/*,{id: 3}*/]
 
+//console.log(nodes)
 
 
   // circle (node) group
   // NB: the function arg is crucial here! nodes are known by id, not by index!
-  circle = circle.data(nodes, function(d) { return d.id; });
+  circle = circle.data(nodes, function(d) { 
+
+
+if (up === 1){
+
+  console.log('wtf')
+  d.id = 0
+  up = 0
+
+}
+
+
+    console.log(d.id)
+
+
+
+
+
+
+    return d.id; });
 
   // update existing nodes (reflexive & selected visual states)
   circle.selectAll('circle')
@@ -734,6 +583,9 @@ function restart() {
     .style('stroke', function(d) { return d3.rgb(colors(d.id)).darker().toString(); })
     .classed('reflexive', function(d) { return d.reflexive; })
     .on('mouseover', function(d) {
+
+
+
 
 
 
@@ -832,6 +684,9 @@ function restart() {
 
     });
 
+
+ 
+
   // show node IDs
   g.append('svg:text')
       .attr('x', 20)
@@ -856,13 +711,16 @@ function restart() {
         //console.log(d.txt)
 
         
-        
+        //CREATE
         d3.json("https://graphbasedbrowser.herokuapp.com/nodes/create", function(error, data) {console.log(data);})
         .header("Content-Type","application/json") //400     
         .send("POST",JSON.stringify({"nodeId":d.id, "text":d.txt}));
+          
+       
+        lastNodeId = d.id 
 
-        
-        return d.txt; })
+
+        return d.id; })
 
 
   // remove old nodes
@@ -921,6 +779,7 @@ function spliceLinksForNode(node) {
   });
   toSplice.map(function(l) {
     links.splice(links.indexOf(l), 1);
+
   });
 }
 
@@ -961,6 +820,7 @@ function keydown() {
         //.send("POST",JSON.stringify({"nodeId":selected_node.id, "text":"descr"}));
         
         spliceLinksForNode(selected_node);
+
       } else if(selected_link) {
         links.splice(links.indexOf(selected_link), 1);
       }
@@ -1015,33 +875,65 @@ function keydown() {
 
         d3.selectAll('input').remove();
              
-        d3.select('body').append('input')
+        d3.select('div')
+            .append('input')
             .attr('type','text')
-            .attr('name','textInput')
+            //.attr('type="hidden"')
+            .attr('name','textinput')
             .attr('id','myform')
             .attr('value','Text goes here')
+            
+            /*
+            .on('onmouseenter',function() {
 
-        d3.select('body').append('input')
-            .attr('type','Submit')
-            .attr('name','submit')
-            .attr('value','go')
-            .on("click", function() {
-    
-              //console.log(selected_node)
-
-              selected_node.txt = document.getElementById("myform").value;
-
-                svg.selectAll('*').remove();
-              drawit()
-              d3.selectAll('input').remove();
-
-              d3.json("https://graphbasedbrowser.herokuapp.com/nodes/update", function(error, data) {console.log(data);})
-        .header("Content-Type","application/json") //400
-        //.post("nodeId":"Read a book");        
-        .send("POST",JSON.stringify({"nodeId":selected_node.id, "text":selected_node.txt}));
+                console.log('uuuuuuuuu')
 
             })
- 
+            */  
+
+            .on('keydown', function() {
+
+               switch(d3.event.keyCode) {
+
+                        case 13: // enter
+                         
+                                  selected_node.txt = document.getElementById("myform").value;
+                                  svg.selectAll('*').remove();
+                                  drawit()
+                                  d3.selectAll('input').remove();
+                                  d3.json("https://graphbasedbrowser.herokuapp.com/nodes/update", function(error, data) {console.log(data);})
+                                  .header("Content-Type","application/json") //400
+                                  //.post("nodeId":"Read a book");        
+                                  .send("POST",JSON.stringify({"nodeId":selected_node.id, "text":selected_node.txt}));
+
+
+                                  restart();
+                                  break;
+                                  }})
+                
+              d3.select('svg').on('mouseup', function() {
+    
+
+                                  selected_node.txt = document.getElementById("myform").value; //понятно что форма не получает, ругается
+                                  svg.selectAll('*').remove();
+                                  drawit()
+                                  d3.selectAll('input').remove();
+                                  d3.json("https://graphbasedbrowser.herokuapp.com/nodes/update", function(error, data) {console.log(data);})
+                                  .header("Content-Type","application/json") //400
+                                  //.post("nodeId":"Read a book");        
+                                  .send("POST",JSON.stringify({"nodeId":selected_node.id, "text":selected_node.txt}));
+
+
+                                  //restart();
+                                  return true
+              })
+              
+               
+
+            $("div").offset({ left: selected_node.x , top: selected_node.y +10})
+
+            console.log(selected_node.x)
+
       }
       restart();
       break;
@@ -1077,5 +969,4 @@ restart();
 
 </script>
 
-</body>
 </html>

@@ -14,11 +14,14 @@ from sqlalchemy import Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 
 
+
+
 app = Flask(__name__, static_url_path = "")
 
-#engine = create_engine('postgres:///jive', echo=True)
-engine = create_engine(os.environ['DATABASE_URL'], echo=True)
+engine = create_engine('postgres:///jive', echo=True)
+#engine = create_engine(os.environ['DATABASE_URL'], echo=True)
 connection = engine.connect()
+
 
 @app.errorhandler(400)
 def not_found(error):
@@ -33,7 +36,7 @@ def not_found(error):
 def test():
 
 	arr =[]
-	for row in engine.execute('select * from nodes'):
+	for row in engine.execute('select * from nodes where id !=2'):
 		arr.append(dict(row))
 		print(row)
 	return jsonify(arr); 
@@ -48,6 +51,7 @@ def index():
 @app.route('/nodes',methods = ['GET','POST'])
 def getNodes():
 	arr =[]
+
 	for row in engine.execute('select id,txt from nodes'):
 		arr.append(dict(row))
 
@@ -100,8 +104,16 @@ def getLinks():
 
     arr =[]
     for row in engine.execute('select target,source from edges'):
+        #for k,v in dict(row):
+        #    print (k,v)
+
+
+
 
         arr.append(dict(row))
+        dc = dict(row)
+        for k,v in dc.items():
+            print (k,v)
 
     return jsonify(arr); 
 
@@ -136,7 +148,29 @@ def updateLinks():
         #engine.execute("insert into edges (source,target) values (" + str(src) + "," + str(tgt) +")")
 
 
-"""
+@app.route('/links/delete',methods = ['POST'])
+def deleteLinks():
+ 
+
+    if not request.json or not 'lks' in request.json:
+        abort(400)
+    task = {
+ 
+        'lks': request.json['lks']
+
+       
+    }
+
+    re = request.json['lks']
+    print (request.json['lks'])
+
+    engine.execute(" delete from edges")
+
+    engine.execute(" delete from nodes")
+
+
+"""  
+
 @app.route('/links/create',methods = ['POST'])
 def createLinks():
 
@@ -148,8 +182,57 @@ def createLinks():
         'target': request.json['tgt']
        
     }
+
+     engine.execute("INSERT INTO public.edges(source, target) values (" + str(src) + "," + str(tgt) +")")
+
     #engine.execute('insert into edges (source,target) values (2,3)')
-    engine.execute("insert into edges (source,target) values (" +str(request.json['src'])+ "," + "'" + str(request.json['tgt'])+"')")
-    """
+    #engine.execute("insert into edges (source,target) values (" +str(request.json['src'])+ "," + "'" + str(request.json['tgt'])+"')")
+"""
+
+
+@app.route('/getquery',methods = ['GET','POST'])
+def get_by_post():
+
+    def cook():
+
+        print(">>>>>>>>>>>>>>>>>>>>ALL       " + str(request.args))
+        #failed#print(">>>>>>>>>>>>>>>>>>>>ARG[0]       " + str(request.args[0]))
+        print(">>>>>>>>>>>>>>>>>>>>ARGtoDICT       " + str(dict(request.args)))
+        got = dict(request.args)
+        gotstr = ''
+
+        for k,v in got.items():
+            print ('KKKKKKKKKKKKKKKKKkk' + str(k))
+            print ('VVVVVVVVVVVVVVVV' + str(type(v[0])))
+            
+            if v[0] == '':
+                print ('FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFff')
+                gotstr = str(k)
+                break
+
+            gotstr = str(k) + '=' + str(v[0])
+
+        print ('GOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOTTTTTTTTTTt' + gotstr)
+
+        al = []
+        
+        for row in engine.execute(gotstr):
+        
+            al.append(dict(row))
+            #print(dict(row))
+        return al
+        
+
+    
+
+    return jsonify(cook());
+
+
+
+
+
+
+
+
 if __name__ == "__main__":
     app.run(debug = True)
