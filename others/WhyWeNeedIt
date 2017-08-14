@@ -1,0 +1,3 @@
+-For a long time I've been waiting/googling for the tool sitting on top of neo4j browser. In my work and everyday life I like to use mind mapping tools. But most mind maps on market are tree structured and this is their restriction. For advanced users it should be extended with graph view and search.
+Meanwhile I'm working on a small graph based mindmap for my JS portfolio with d3/flask/neo4j. I have also a couple of ideas regarding possible new options extended with d3.js examples. If you're interested, I could list ideas next time.
+- Thank you for your interest and enthusiasm. Interesting part about your mind mapping tool. I've had the same experience with existing mind mapping tools: the tree structure is often not suitable for advanced mindmapping. 

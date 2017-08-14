@@ -28,9 +28,6 @@ svg {
   -o-user-select: none;
 user-select: none;
 
-
-
-
 }
 
 svg:not(.active):not(.ctrl) {
@@ -107,19 +104,78 @@ div.CodeMirror.cm-s-default{
     
 }
 
+#descr{
+     position:absolute;
+    bottom:-150px;
+    left: 10px
+    
+
+}
+
+body {
+  font-family: "Helvetica Neue", Helvetica, sans-serif;
+  margin: 0 auto 4em auto;
+  tab-size: 2;
+  -webkit-text-size-adjust: none;
+}
+
+
   
 </style>
 
 
-<div></div>
+
+
+
+<div id="container">
+    <textarea id="code" cols="6" rows="3"></textarea>
+    <input id = 'sql' value="Run query" onclick="getcmNodes()" type="button">
+    <input id = 'clearSVG'value="Clear SVG" onclick="clearAlllinks()" type="button">
+
+</div>
+
+
+<div id = "descr">
+
+<p>
+
+Нажмите в свободном месте SVG картинки чтобы создать новую node<br>
+Ctrl-drag node чтобы перемещать <br>
+drag from node to node создает link <br>
+<br>
+Нажмите на node,link чтобы выбрать ее. Когда она выбрана: <br>
+Delete удаляет<br>
+F2 переименоать<br>
+Enter/mouseup сохраняет изменения<br>
+<br>
+F5 позволяет проверить результат сохранения данных в базе.
+<br>
+Кнопка <strong>Clear SVG</strong> очищает SVG и данные
+<br>
+Форма ввода sql запроса позволяет фильтровать nodes. 
+<br>
+На данный момент принимает один числовой параметр и поддерживает все операоры сравнения  
+<br>
+Имеют место быть баги:
+<br>
+Fatal: Если количесто liks >= количества nodes то svg не отрисует, нажмите Clear SVG
+<br>
+<br>
+Github: https://github.com/gGotcha/graphbasedbrowser
+
+
+</div>
+
+
+<editform>
+</editform>
 
 
 <body>
 
-    <textarea id="code" cols="6" rows="3"></textarea>
-    <input id = 'sql' value="Run query" onclick="getcmNodes()" type="button">
-    <input id = 'clearSVG'value="Clear SVG" onclick="clearAlllinks()" type="button">
 </body>
+
+
 <script>
 
 
@@ -136,21 +192,9 @@ var svg = d3.select('body')
   .attr('height', height);
 
 
-var nodes = [];//[{id: 0},{id: 1},{id: 2}/*,{id: 3}*/]
-
+var nodes = [];
 lastNodeId = -1
-
 var  links =[];
-
-
-//drawit()
-
-
-// set up initial nodes and links
-//  - nodes are known by 'id', not by index in array.
-//  - reflexive linksList are indicated on the node (as a bold black circle).
-//  - links are always source < target; edge directions are set by 'left' and 'right'.
-
 
 
 
@@ -170,11 +214,12 @@ up = 1
 }
 
 
+
+
 function upLiks(){
 
    d3.json("https://graphbasedbrowser.herokuapp.com/links/up", function(error, data) {console.log(data);})
   .header("Content-Type","application/json") //400
-  //.post("nodeId":"Read a book"); 
   .send("POST",JSON.stringify({"lks": links}));
   //console.log(links)
 }
@@ -188,7 +233,7 @@ var myCodeMirror = CodeMirror.fromTextArea(document.getElementById('code'), {
   });
 
 
-var text =  myCodeMirror.setValue('select * from nodes where id > 0')
+var text =  myCodeMirror.setValue('select * from nodes where id = 0')
 
 
 function getcmNodes(){
@@ -216,8 +261,6 @@ function getcmNodes(){
         function get_data(nodelist) 
         {
             //console.log(nodelist)
-            
-            //nodes = [{id: 0},{id: 1},{id: 2}/*,{id: 3}*/]
 
             nodes = nodelist
 
@@ -236,31 +279,20 @@ function getNodes(){
 
 
   qu = 'https://graphbasedbrowser.herokuapp.com/nodes'
-  //qu = 'https://graphbasedbrowser.herokuapp.com/todo/api/v1.0/tasks/win?select id,txt from nodes'
+
 
       d3.json(qu, get_data);
 
       function get_data(nodelist) 
       {
           console.log(nodelist)
-          
-         // nodes = [{id: 0},{id: 1},{id: 2}/*,{id: 3}*/]
 
          nodes = []
 
       $.each(nodelist, function(i, item) {
-         //onsole.log(item.target)
-          //onsole.log(item.source)
-          //сnsole.log(links)
-          //links.push({source:nodes[item.source],target:nodes[item.target]})});
           
           nodes.push({id:item.id,txt:item.txt})
         })
-
-          //nodes = nodelist
-
-
-          //drawit()
           getLinks()
 
       }
@@ -289,23 +321,11 @@ function getLinks()
 
 
            if (nodes[item.source]||nodes[item.target] === undefined){
-              //nodes[item.source] = 0
-              console.log('tttttttt')
 
            }
-          console.log(nodes[item.target])
-          console.log(nodes[item.source])
-          console.log(nodes[0])
-          console.log(nodes[1])
-          console.log(nodes)
-          console.log(links)
 
-
-
-
-          //links.push({source:nodes[item.source],target:nodes[item.target]})});
           links.push({source:nodes[item.source],target:nodes[item.target]})
-          //links.push({source:nodes[item.target],target:nodes[item.source]})
+
 
           console.log(links)
      
@@ -315,19 +335,6 @@ function getLinks()
 
           });
 
-/*
-
-//got array OK
-//OK got json
-jarr = [{s:1,t:2},{s:0,t:2}]//[{s:0,t:1},{s:1,t:2},{s:0,t:2}]
-links =[];
-
-$.each(jarr, function(i, item) {
-    links.push({source:nodes[item.s],target:nodes[item.t]})
-    //console.log(item.s, item.t);
-});
-
-*/
          drawit()
 
     }
@@ -338,34 +345,7 @@ $.each(jarr, function(i, item) {
 
 getNodes()
 
-
-
-
-
-
-
-/*
-  links = [
-
-//{source: nodes[0], target: nodes[1], left: false, right: true }
-//{source: nodes[1], target: nodes[2], left: true, right: true }
-
-//>>>>>>>>>>>>>>>>>OFF DRAW LINKS
-
-    //{source: nodes[0], target: nodes[1], left: false, right: true }
-    //{source: nodes[1], target: nodes[2], left: true, right: true }
-  ];
-*/
-
-//re()
-
-
 function drawit(){
-
-
-//console.log(nodes)
-//console.log(links)
-
 
 
 d3.selectAll('path').remove();
@@ -430,25 +410,10 @@ d3.selectAll('g').remove();
     mousedown_link = null;
   }
 
-  // update force layout (called automatically each iteration)
   function tick() {
 
-
-
-     // d3.selectAll('path').remove()
-
-
-
-      // draw directed linksList with proper padding from node centers
-
-
-
       path.attr('d', function(d) {
-        //console.log('ddddddddddddddddddddddddddddddddddd')
-        //console.log(d.source)
-        //console.log(d.target)
-        //console.log(d.id)
-        //console.log(d)
+
 
         var deltaX = d.target.x - d.source.x,
             deltaY = d.target.y - d.source.y,
@@ -462,20 +427,13 @@ d3.selectAll('g').remove();
             targetX = d.target.x - (targetPadding * normX),
             targetY = d.target.y - (targetPadding * normY);
 
-        //console.log(d.id)
-
-    //>>>>>>>>>>>>>>>>>OFF DRAW LINKS
       return 'M' + sourceX + ',' + sourceY + 'L' + targetX + ',' + targetY;
       });
 
- //console.log(d.id)
+
 
     circle.attr('transform', function(d) {
 
-
-      //console.log('transformffffffffffffffffffff')
-      //console.log(d.id)
-      //console.log(nodes)
 
 
       return 'translate(' + d.x + ',' + d.y + ')';
@@ -493,10 +451,6 @@ function callrestart(argument) {
 function restart() {
 
 
-  console.log('linkssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss')
-  console.log(links)
-  // path (link) group
-
   path = path.data(links);
 
   //path = path.data(links);
@@ -510,7 +464,7 @@ function restart() {
 
 
 
-//cjздание движением
+//cоздание движения
   // add new links
   path.enter().append('svg:path')
     .attr('class', 'link')
@@ -528,22 +482,9 @@ function restart() {
       restart();
     });
 
-
-
-
-
   // remove old links
-
-   // d3.selectAll('path').remove()
   path.exit().remove();
 
-//var nodes = [{id: 0},{id: 1},{id: 2}/*,{id: 3}*/]
-
-//console.log(nodes)
-
-
-  // circle (node) group
-  // NB: the function arg is crucial here! nodes are known by id, not by index!
   circle = circle.data(nodes, function(d) { 
 
 
@@ -555,14 +496,6 @@ if (up === 1){
 
 }
 
-
-    console.log(d.id)
-
-
-
-
-
-
     return d.id; });
 
   // update existing nodes (reflexive & selected visual states)
@@ -573,9 +506,6 @@ if (up === 1){
   // add new nodes
   var g = circle.enter().append('svg:g');
 
-
-
-
   g.append('svg:circle')
     .attr('class', 'node')
     .attr('r', 12)
@@ -584,28 +514,18 @@ if (up === 1){
     .classed('reflexive', function(d) { return d.reflexive; })
     .on('mouseover', function(d) {
 
-
-
-
-
-
       if(!mousedown_node || d === mousedown_node) return;
 
       // enlarge target node
       d3.select(this).attr('transform', 'scale(1.1)');
-    
 
     })
     .on('mouseout', function(d) {
 
 
-
       if(!mousedown_node || d === mousedown_node) return;
       // unenlarge target node
       d3.select(this).attr('transform', '');
-
-
-
 
     })
     .on('mousedown', function(d) {
@@ -672,43 +592,24 @@ if (up === 1){
 
       upLiks()
 
-
-
-
-
       restart();
 
-
-
-
-
     });
-
-
- 
 
   // show node IDs
   g.append('svg:text')
       .attr('x', 20)
       .attr('y', 10)
       .attr('class', 'id')
-      //.text('rrrrr')
-      //.text(nodes[return d.id; ])
       .text(function(d) { 
-
-
-        //console.log(d.id)
-        //console.log(d.txt)
-
-        
-        
-        if (d.txt === undefined){
+           
+       if (d.txt === undefined){
 
               //console.log('unde')
               d.txt = ''
 
         }
-        //console.log(d.txt)
+
 
         
         //CREATE
@@ -719,8 +620,8 @@ if (up === 1){
        
         lastNodeId = d.id 
 
-
-        return d.id; })
+        return d.txt; })
+        ///return d.id; })
 
 
   // remove old nodes
@@ -827,15 +728,8 @@ function keydown() {
       selected_link = null;
       selected_node = null;
 
-
-
-
       upLiks()
       restart();
-
-
-
-
 
       break;
     case 66: // B
@@ -866,30 +760,16 @@ function keydown() {
       restart();
       break;
   
-   case 9: // 
+   case 113: // 
       if(selected_node) {
-         //body.selectAll('*').remove();
 
-        // toggle node reflexivity  
-        //selected_node.txt = 'TT';
-
-        d3.selectAll('input').remove();
-             
-        d3.select('div')
+        d3.select('editform')
             .append('input')
             .attr('type','text')
             //.attr('type="hidden"')
             .attr('name','textinput')
             .attr('id','myform')
             .attr('value','Text goes here')
-            
-            /*
-            .on('onmouseenter',function() {
-
-                console.log('uuuuuuuuu')
-
-            })
-            */  
 
             .on('keydown', function() {
 
@@ -898,41 +778,41 @@ function keydown() {
                         case 13: // enter
                          
                                   selected_node.txt = document.getElementById("myform").value;
-                                  svg.selectAll('*').remove();
                                   drawit()
-                                  d3.selectAll('input').remove();
+
+                                  d3.selectAll('#myform').remove();
+
                                   d3.json("https://graphbasedbrowser.herokuapp.com/nodes/update", function(error, data) {console.log(data);})
-                                  .header("Content-Type","application/json") //400
-                                  //.post("nodeId":"Read a book");        
+                                  .header("Content-Type","application/json") //400  
                                   .send("POST",JSON.stringify({"nodeId":selected_node.id, "text":selected_node.txt}));
 
 
                                   restart();
                                   break;
                                   }})
-                
+             
               d3.select('svg').on('mouseup', function() {
     
 
-                                  selected_node.txt = document.getElementById("myform").value; //понятно что форма не получает, ругается
-                                  svg.selectAll('*').remove();
+                                  selected_node.txt = document.getElementById("myform").value; // форма не получает, ругается
                                   drawit()
-                                  d3.selectAll('input').remove();
+                                  d3.selectAll('#myform').remove();
                                   d3.json("https://graphbasedbrowser.herokuapp.com/nodes/update", function(error, data) {console.log(data);})
                                   .header("Content-Type","application/json") //400
-                                  //.post("nodeId":"Read a book");        
+  
                                   .send("POST",JSON.stringify({"nodeId":selected_node.id, "text":selected_node.txt}));
 
 
-                                  //restart();
-                                  return true
+                                  restart();
+
               })
-              
-               
+                    
 
-            $("div").offset({ left: selected_node.x , top: selected_node.y +10})
+            $("editform").offset({ left: selected_node.x , top: selected_node.y +10})
 
-            console.log(selected_node.x)
+
+   
+
 
       }
       restart();
@@ -968,5 +848,6 @@ restart();
 
 
 </script>
+
 
 </html>
